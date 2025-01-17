@@ -4,12 +4,12 @@ from bs4 import BeautifulSoup
 import requests, os
 
 class ScrapeTool(BaseTool):
-    name: str = Field(default="ScrapeTool")  # Explicitly typed and using Field for proper annotation
+    name: str = Field(default="ScrapeTool")  # Explicitly typed
     description: str = Field(default=(
         "Scrapes the main text content of a website (does not include HTML). "
         "Useful for when you need to read the plaintext content of a website. "
         "The input to this tool should be a URL"
-    ))  # Explicitly typed and using Field for proper annotation
+    ))  # Explicitly typed
 
     def scrape_website(self, url: str) -> str:
         if not url.startswith('http'):
@@ -24,12 +24,12 @@ class ScrapeTool(BaseTool):
         return self._run(url)
 
 class WebReadTool(BaseTool):
-    name: str = Field(default="WebsiteReader")  # Explicitly typed and using Field for proper annotation
+    name: str = Field(default="WebsiteReader")  # Explicitly typed
     description: str = Field(default=(
         "Reads the HTML content of a website excluding script and style tags. "
         "Useful for reading the contents of a website URL. "
         "The input to this tool should be a URL."
-    ))  # Explicitly typed and using Field for proper annotation
+    ))  # Explicitly typed
 
     def _run(self, url: str) -> str:
         headers = {
