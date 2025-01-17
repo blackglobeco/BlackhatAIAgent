@@ -4,6 +4,6 @@ langchain-community
 python-dotenv
 requests
 googlesearch-python
-duckduckgo-search==0.3
+duckduckgo-search
 beautifulsoup4
 rich
