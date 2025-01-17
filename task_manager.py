@@ -2,6 +2,7 @@ from langchain.callbacks.base import BaseCallbackHandler
 from langchain.llms.base import BaseLLM
 from langchain.tools import BaseTool
 from code import InteractiveConsole
+from langchain.llms import OpenAI
 import json
 import os
 
@@ -124,13 +125,13 @@ class TaskManager(object):
     
     def __init__(self, goal: str, tools: list, llm: BaseLLM, verbose: bool = True, output_func: callable = print, complete_func: callable = save_to_file, input_func: callable = input, current_tasks: list = None, final_result: dict = None, allow_repeat_tasks: bool = True, completed_tasks: dict = None, persist: str = None, confirm_tool: bool = False):
         """
-        :param goal: str - final goal in natrual language
+        :param goal: str - final goal in natural language
         :param tools: list - a list of tools (dicts) containing keys "name" and "description"
         :param llm: BaseLLM - LLM instance from langchain.llms
 
         :kwarg verbose: bool - defaults to True, if False, will not print updated info
         :kwarg allow_repeat_tasks: bool - defaults to True but you might want to disable, will not allow the bot to add tasks that have already been completed
-        :kwarg output_func: callable - defaults to print, for verbose outout
+        :kwarg output_func: callable - defaults to print, for verbose output
         :kwarg input_func: callable - defaults to input, for user input
         :kwarg complete_func: callable - func to run when complete, accepts a goal (str) and results (dict), defaults to a func that saves to file
         :kwarg persist: str - defaults to None, but if set to a filepath, [stored_info, final_result, current_tasks] will be loaded and saved there
@@ -139,6 +140,11 @@ class TaskManager(object):
         :kwarg current_tasks: list - defaults to None for empty, contains a list of (strings) tasks in natural language, overwrites loaded tasks
         :kwarg final_result: dict - defaults to None for empty, contains a dict of any results for the final goal, overwrites loaded result
         """
+
+        # If `llm` is not passed, instantiate with a default OpenAI model
+        if not llm:
+            llm = OpenAI(model_name="gpt-3.5-turbo")
+        
         self.llm = llm
         self.final_goal = goal
         self.tools = tools
@@ -148,7 +154,7 @@ class TaskManager(object):
         self.allow_repeat_tasks = allow_repeat_tasks
         self.confirm_tool = confirm_tool
         self.verbose = verbose
-        if persist: # load from file
+        if persist:  # load from file
             self.persist = persist
             self._load_persist()
         # overwrite from kwargs
@@ -160,7 +166,7 @@ class TaskManager(object):
             self.completed_tasks = completed_tasks
         
 
-        if not self.current_tasks: # if no loaded tasks
+        if not self.current_tasks:  # if no loaded tasks
             self._create_initial_tasks()
 
     def init_agent(self, agent, on_tool_start: callable = None, on_tool_end: callable = None):
