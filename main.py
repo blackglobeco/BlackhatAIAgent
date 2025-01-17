@@ -2,8 +2,8 @@ from dotenv import load_dotenv; load_dotenv()
 
 from langchain.agents import initialize_agent, AgentType
 from langchain.memory import ConversationBufferMemory
-from langchain.chat_models import ChatOpenAI
-from langchain.llms import OpenAI
+from langchain_community.chat_models import ChatOpenAI
+from langchain_community.llms import OpenAI
 # task_manager.py
 from task_manager import TaskManager, convert_langchain_tools, EmptyCallbackHandler
 # prompt.py - recycled
